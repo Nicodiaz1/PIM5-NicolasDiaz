@@ -253,6 +253,10 @@ all_features = sorted([c for c in df.columns if c not in (TARGET, "fecha_prestam
 selected_feature = st.sidebar.selectbox("Variable a explorar", all_features)
 freq_label = st.sidebar.selectbox("Frecuencia temporal", ["Mensual (M)", "Semanal (W)", "Trimestral (Q)"])
 drift_freq = freq_label.split("(")[1].rstrip(")")
+# pandas cambió algunas etiquetas de frecuencia; mapear las antiguas a las nuevas cuando aplique
+if drift_freq == "M":
+    # 'M' (month end) está deprecado en algunas versiones; usar 'ME' si corresponde
+    drift_freq = "ME"
 
 # dividimos el dataset en referencia (histórico) y actual según el slider
 cutoff_date = df["fecha_prestamo"].quantile(ref_ratio)
@@ -331,8 +335,8 @@ def color_risk(val):
     return "background-color: #d4edda; color: #155724;"
 
 st.dataframe(
-    metrics_df.style.applymap(color_risk, subset=["Riesgo"]),
-    use_container_width=True,
+    metrics_df.style.map(color_risk, subset=["Riesgo"]),
+    width="stretch",
 )
 
 ####################################
@@ -383,7 +387,7 @@ if trend_df.empty:
 else:
     col2.markdown("**Evolución del PSI en el tiempo**")
     col2.line_chart(trend_df.set_index("Período")["PSI"])
-    col2.dataframe(trend_df, use_container_width=True)
+    col2.dataframe(trend_df, width="stretch")
 
 ####################################
 # 5.4 Sección: Tabla de pronósticos del modelo
@@ -399,5 +403,5 @@ st.dataframe(
     current_predicted[to_show]
     .sort_values(by="prob_pago", ascending=False)
     .reset_index(drop=True),
-    use_container_width=True,
+    width="stretch",
 )
