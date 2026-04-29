@@ -218,4 +218,4 @@ Después de abrirse Streamlit, el dashboard mostrará:
 
 ## Nota sobre el dataset
 
-El archivo principal es `Base_de_datos.csv`. El proyecto usa este archivo como origen para preparar los datos y construir el monitoreo.
+El archivo principal es `Base_de_datos.xlsx`. El proyecto usa este archivo como origen para preparar los datos y construir el monitoreo.
